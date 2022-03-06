@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 
 export default class GalleryItem extends Component {
 	render() {
-		const { src } = this.props;
+		const { url, description } = this.props.item;
 		return (
 			<div className='Gallery-item'>
-				<img src={src}/>	
+				<div className='Gallery-item-overlay'></div>
+				<div className='Gallery-item-description'>{description}</div>
+				<img src={url}/>	
 			</div>
 		)
 	}

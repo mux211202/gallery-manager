@@ -35,12 +35,14 @@ body {
   line-height: 1.5;
 }
 
-/* Удаляем стандартную стилизацию для всех ul и il, у которых есть атрибут class*/
 ul[class],
 ol[class] {
   list-style: none;
 }
-
+a{
+  text-decoration: none;
+  color: inherit;
+}
 a:not([class]) {
   text-decoration-skip-ink: auto;
 }

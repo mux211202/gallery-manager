@@ -5,6 +5,26 @@
     flex-wrap: wrap;
     justify-content: center;
     &-item{
+        transition: 0.4s all ease;
+        position: relative;
+        &-overlay{
+            position: absolute;
+            width: 400px;
+            height: 200px;
+            top: 10px;
+            left:0;
+            background: #000;
+            opacity: 0;
+            transition: inherit;
+        }
+        &-description{
+            position: absolute;
+            color: aliceblue;
+            bottom: 7%;
+            left: 3%;
+            opacity: 0;
+            transition: inherit;
+        }
         img{
             margin-left: 10;
             margin-right: 10px;
@@ -13,6 +33,15 @@
             width: 400px;
             object-fit: cover;
         }
+        
     
+    }
+}
+.Gallery-item:hover{
+    .Gallery-item-overlay{
+        opacity: .4;
+    }
+    .Gallery-item-description{
+        opacity: 1;
     }
 }
