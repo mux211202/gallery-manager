@@ -1,0 +1,28 @@
+.MainPage{
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 100px;
+    &-title{
+        font-weight: 700;
+        font-size: 70px;
+        line-height: 18px;
+    }
+    &-button{
+        margin-top: 76px;
+        width: 200px;
+        height: 65px;
+        border-radius: 20px;
+        &-text{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 18px;
+            &_bigger{
+                font-size: 55px;
+                font-weight: normal;
+            }
+        }
+    }
+}

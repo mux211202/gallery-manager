@@ -1,0 +1,18 @@
+.Gallery{
+    margin: 0 auto;
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    &-item{
+        img{
+            margin-left: 10;
+            margin-right: 10px;
+            margin-top: 10px;
+            height: 200px;
+            width: 400px;
+            object-fit: cover;
+        }
+    
+    }
+}

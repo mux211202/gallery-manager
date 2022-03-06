@@ -1,0 +1,8 @@
+@use '../../../sass/variables' as v;
+.Button{
+    background: v.$light-color;
+    color: v.$dark-color;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}

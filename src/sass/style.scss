@@ -1,0 +1,12 @@
+@use './variables' as v;
+@import url('./main.scss');
+body{
+    background: v.$dark-color;
+    color: v.$light-color;
+    font-family: 'Roboto';
+}
+.container{
+    width: 1200px;
+    margin: 0 auto; 
+    padding-top: 30px;
+}
