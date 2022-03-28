@@ -10,3 +10,13 @@ body{
     margin: 0 auto; 
     padding-top: 30px;
 }
+.overlay{
+    min-width: 100%;
+    min-height: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 2;
+    background: #000;
+    opacity: .2;
+}
