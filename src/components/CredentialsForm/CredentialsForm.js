@@ -7,6 +7,17 @@ import Button from '../Layout/Button/Button';
 import { connect } from 'react-redux';
 import { credentialsFormActions } from '../../store/slices/credentialsForm';
 class CredentialsForm extends Component {
+	constructor(){
+		super();
+		this.state = {
+			formType: 'sign-in'
+		}
+	}
+
+	toggleFormType = (formType) => {
+		this.setState({ formType });
+	}
+
 	formSubmitHandler = (e) => {
 		e.preventDefault();
 		const form = e.target;
@@ -16,12 +27,20 @@ class CredentialsForm extends Component {
 		this.props.submit(contentObj);
 	}
 	render() {
-		const { formType } = this.props;
+		const { formType } = this.state;
 		return (
 				<Form onSubmit={this.formSubmitHandler} formClass='CredentialsForm'>
 					<div className='CredentialsForm-tabs'>
-						<div className={'CredentialsForm-tabs-item' + `${formType === 'sign-in' ? ' active' : ''}`}>Sign in</div>
-						<div className={'CredentialsForm-tabs-item' + `${formType === 'log-in' ? ' active' : ''}`}>Log in</div>
+						<div 
+						onClick={()=>{this.toggleFormType('sign-in')}}
+						className={'CredentialsForm-tabs-item' + `${formType === 'sign-in' ? ' active' : ''}`}>
+							Sign in
+						</div>
+						<div 
+						onClick={()=>{this.toggleFormType('log-in')}}
+						className={'CredentialsForm-tabs-item' + `${formType === 'log-in' ? ' active' : ''}`}>
+							Log in
+						</div>
 					</div>
 					<div className='CredentialsForm-Form'>
 						{ formType === 'sign-in' && <SignInForm/> }
