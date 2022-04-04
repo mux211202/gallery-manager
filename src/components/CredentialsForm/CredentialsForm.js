@@ -7,17 +7,7 @@ import Button from '../Layout/Button/Button';
 import { connect } from 'react-redux';
 import { credentialsFormActions } from '../../store/slices/credentialsForm';
 class CredentialsForm extends Component {
-	constructor(){
-		super();
-		this.state = {
-			formType: 'sign-in'
-		}
-	}
-
-	toggleFormType = (formType) => {
-		this.setState({ formType });
-	}
-
+	
 	formSubmitHandler = (e) => {
 		e.preventDefault();
 		const form = e.target;
@@ -26,44 +16,51 @@ class CredentialsForm extends Component {
 		const contentObj = {email, password}
 		this.props.submit(contentObj);
 	}
+	toggleFormMode = (content) => {
+		this.props.toggleCredentialsFormMode(content);
+	}
 	render() {
-		const { formType } = this.state;
+		console.log(this.props)
+		const {credentialsFormMode} = this.props;
 		return (
 				<Form onSubmit={this.formSubmitHandler} formClass='CredentialsForm'>
 					<div className='CredentialsForm-tabs'>
 						<div 
-						onClick={()=>{this.toggleFormType('sign-in')}}
-						className={'CredentialsForm-tabs-item' + `${formType === 'sign-in' ? ' active' : ''}`}>
+						onClick={()=>this.toggleFormMode('sign-in')}
+						className={'CredentialsForm-tabs-item' + `${credentialsFormMode === 'sign-in' ? ' active' : ''}`}>
 							Sign in
 						</div>
 						<div 
-						onClick={()=>{this.toggleFormType('log-in')}}
-						className={'CredentialsForm-tabs-item' + `${formType === 'log-in' ? ' active' : ''}`}>
+						onClick={()=>this.toggleFormMode('log-in')}
+						className={'CredentialsForm-tabs-item' + `${credentialsFormMode === 'log-in' ? ' active' : ''}`}>
 							Log in
 						</div>
 					</div>
 					<div className='CredentialsForm-Form'>
-						{ formType === 'sign-in' && <SignInForm/> }
-						{ formType === 'log-in' && <LogInForm/> }
+						{ credentialsFormMode === 'sign-in' && <SignInForm/> }
+						{ credentialsFormMode === 'log-in' && <LogInForm/> }
 					</div>
 					<div className='CredentialsForm-sidebar'>
-						{ formType === 'sign-in' ? 'SIGN IN' : 'LOG IN' }
+						{ credentialsFormMode === 'sign-in' ? 'SIGN IN' : 'LOG IN' }
 					</div>
-					<Button className="CredentialsForm-btn" type="submit">{ formType === 'sign-in' ? 'SIGN IN' : 'LOG IN' }</Button>
+					<Button className="CredentialsForm-btn" type="submit">{ credentialsFormMode === 'sign-in' ? 'SIGN IN' : 'LOG IN' }</Button>
 				</Form>
 		)
 	}
 }
 
 const mapStateToProps = state => {
+	const slice = state.credentialsFormReducer;
 	return {
-	  email: state.email, 
-	  password: state.password
+		credentialsFormMode: slice.credentialsFormMode,
+		email: slice.email, 
+		password: slice.password
 	};
-  };
-  const mapDispatchToProps = dispatch => {
+};
+const mapDispatchToProps = dispatch => {
 	return {
-	  submit: (contentObj)=> dispatch(credentialsFormActions.submit(contentObj))
+		submit: (contentObj)=> dispatch(credentialsFormActions.submit(contentObj)), 
+		toggleCredentialsFormMode: (content) => dispatch(credentialsFormActions.toggleCredentialsFormMode(content))
 	};
-  }
+}
   export default connect(mapStateToProps, mapDispatchToProps)(CredentialsForm);

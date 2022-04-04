@@ -1,6 +1,11 @@
 import './Button.scss'
 export default function Button(props) {
   return (
-    <button type={props.type} className={`Button ${props.className}`}>{props.children}</button>
+    <button
+    onClick={props.onClick} 
+    type={props.type} 
+    className={`Button ${props.className}`}>
+      {props.children}
+    </button>
   )
 }

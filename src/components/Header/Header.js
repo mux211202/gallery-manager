@@ -2,20 +2,29 @@ import { PureComponent } from "react";
 import Button from "../Layout/Button/Button";
 import { Link } from "react-router-dom";
 import './Header.scss';
-
-export default class Header extends PureComponent {
+import { connect } from 'react-redux';
+import { credentialsFormActions } from '../../store/slices/credentialsForm';
+class Header extends PureComponent {
 	constructor(){
 		super();
 		this.state = {
-			isLogged: true
+			isLogged: false
 		}
+	}
+
+	buttonClickHandler = (content) => {
+		this.props.toggleCredentialsForm(content);
 	}
 	render() {
 		const { isLogged } = this.state;
 		const headerButtons = !isLogged ? (
 		<>
-			<Button className="Header-buttons-item">Sign in</Button>
-			<Button className="Header-buttons-item">Sign up</Button>
+			<Button
+			onClick={()=>this.buttonClickHandler('sign-in')}
+			className="Header-buttons-item">Sign in</Button>
+			<Button
+			onClick={()=>this.buttonClickHandler('log-in')}  
+			className="Header-buttons-item">Log in</Button>
 		</>
 		) :(<>
 				<Link to='/gallery1'><Button className="Header-buttons-item">My albums</Button></Link>
@@ -31,3 +40,11 @@ export default class Header extends PureComponent {
 		)
 	}
 }
+
+;
+const mapDispatchToProps = dispatch => {
+	return {
+		toggleCredentialsForm: (content) => dispatch(credentialsFormActions.toggleCredentialsForm(content))
+	};
+}
+export default connect(null, mapDispatchToProps)(Header);
