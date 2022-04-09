@@ -1,0 +1,16 @@
+.Notification{
+    color: white;
+    font-weight: 400;
+    border-radius: 5px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px; 
+}
+.Notification.warning{
+    background-color: rgb(163, 50, 50);
+}
+.Notification.success{
+    background-color: aquamarine;
+}
