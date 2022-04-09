@@ -12,21 +12,26 @@ class CredentialsForm extends Component {
 	constructor(){
 		super();
 		this.state = {
-			isNotificationVisible: false
+			isNotificationVisible: false, 
+			email:'',
+			password:'',
 		}
 	}
 	
+	setEmail = (e) => {
+		console.log(e.target.value)
+		this.setState({email: e.target.value});
+	}
+	setPassword = (password) => { 
+		console.log(password)
+		this.setState({password}) 
+	}
+	setNotification = (isNotificationVisible) => {
+		this.setState({isNotificationVisible});
+	}
 	formSubmitHandler = (e) => {
-		const { credentialsFormMode } = this.props;
 		e.preventDefault();
-		const form = e.target;
-		const email = form.querySelector('.email').value;
-		const password = form.querySelector('.firstPassword').value;
-		if (password.length < 6 && credentialsFormMode === 'sign-in'){
-			this.setState({isNotificationVisible: 'Password length must be 6 characters or more'})
-		} else{
-			this.setState({isNotificationVisible: false})
-		}
+		const { email, password } = this.state;
 		const contentObj = {email, password}
 		this.props.submit(contentObj);
 	}
@@ -37,29 +42,30 @@ class CredentialsForm extends Component {
 		console.log(this.props)
 		const { credentialsFormMode } = this.props;
 		const { isNotificationVisible } = this.state;
+		const { setEmail, setNotification, setPassword } = this;
 		return (
 				<Form onSubmit={this.formSubmitHandler} formClass='CredentialsForm'>
 					<div className='CredentialsForm-tabs'>
 						<div 
 						onClick={()=>this.toggleFormMode('sign-in')}
-						className={'CredentialsForm-tabs-item' + `${credentialsFormMode === 'sign-in' ? ' active' : ''}`}>
+						className={`CredentialsForm-tabs-item ${credentialsFormMode === 'sign-in' ? ' active' : ''}`}>
 							Sign in
 						</div>
 						<div 
 						onClick={()=>this.toggleFormMode('log-in')}
-						className={'CredentialsForm-tabs-item' + `${credentialsFormMode === 'log-in' ? ' active' : ''}`}>
+						className={`CredentialsForm-tabs-item ${credentialsFormMode === 'log-in' ? ' active' : ''}`}>
 							Log in
 						</div>
 					</div>
 					<div className='CredentialsForm-Form'>
-						{ credentialsFormMode === 'sign-in' && <SignInForm/> }
-						{ credentialsFormMode === 'log-in' && <LogInForm/> }
+						{ credentialsFormMode === 'sign-in' && <SignInForm setNotification={setNotification} setEmail={setEmail} setPassword={setPassword}/> }
+						{ credentialsFormMode === 'log-in' && <LogInForm setNotification={setNotification} setEmail={setEmail} setPassword={setPassword}/> }
 					</div>
 					<div className='CredentialsForm-sidebar'>
 						{ credentialsFormMode === 'sign-in' ? 'SIGN IN' : 'LOG IN' }
 					</div>
 					<Button className="CredentialsForm-btn" type="submit">{ credentialsFormMode === 'sign-in' ? 'SIGN IN' : 'LOG IN' }</Button>
-					{ isNotificationVisible && isNotificationVisible.length > 0 && <Notification text={ isNotificationVisible } status = 'warning'/> }
+					{ isNotificationVisible && isNotificationVisible.text.length > 0 && isNotificationVisible.status.length > 0 && <Notification text={ isNotificationVisible.text } status = {isNotificationVisible.status}/> }
 				</Form>
 		)
 	}

@@ -4,14 +4,15 @@ class LogInForm extends Component {
   
 
   render() {
+    const { setEmail, setPassword } = this.props;
     return (
       <>
         <label>E-mail:</label>
         <br/>
-        <input className='email' type='email'/>
+        <input onBlur={setEmail} className='email' type='email'/>
         <label>Password:</label>
         <br/>
-        <input type='password' className='firstPassword'/>
+        <input onBlur={(e)=>setPassword(e.target.value)} type='password' className='firstPassword'/>
       </>
     )
   }
