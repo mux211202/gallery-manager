@@ -25,7 +25,7 @@ export const credentialsFormSlice = createSlice({
         toggleCredentialsFormMode(state, action){
             const payload = action.payload;
             let mode = state.credentialsFormMode;
-            if(payload === 'sign-in' || payload === 'log-in' && payload !== mode){
+            if((payload === 'sign-in' || payload === 'log-in') && payload !== mode){
                 mode = payload;
             }else {
                 return

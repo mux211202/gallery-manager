@@ -7,6 +7,8 @@ import Button from '../Layout/Button/Button';
 import { connect } from 'react-redux';
 import { credentialsFormActions } from '../../store/slices/credentialsForm';
 import Notification from '../Layout/Notification/Notification';
+import { signUpAction } from '../../store/slices/auth';
+
 
 class CredentialsForm extends Component {
 	constructor(){
@@ -32,8 +34,18 @@ class CredentialsForm extends Component {
 	formSubmitHandler = (e) => {
 		e.preventDefault();
 		const { email, password } = this.state;
+		const { credentialsFormMode, signUp } = this.props;
 		const contentObj = {email, password}
 		this.props.submit(contentObj);
+		//  form validation
+
+		if ( credentialsFormMode === 'log-in' ) {
+			return
+		}
+		
+		if ( credentialsFormMode === 'sign-in' ) {
+			signUp(email, password)
+		}
 	}
 	toggleFormMode = (content) => {
 		this.props.toggleCredentialsFormMode(content);
@@ -82,7 +94,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		submit: (contentObj)=> dispatch(credentialsFormActions.submit(contentObj)), 
-		toggleCredentialsFormMode: (content) => dispatch(credentialsFormActions.toggleCredentialsFormMode(content))
+		toggleCredentialsFormMode: (content) => dispatch(credentialsFormActions.toggleCredentialsFormMode(content)),
+		signUp: (email, password) => dispatch(signUpAction(email, password))
 	};
 }
   export default connect(mapStateToProps, mapDispatchToProps)(CredentialsForm);
