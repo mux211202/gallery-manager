@@ -9,7 +9,6 @@ import { credentialsFormActions } from '../../store/slices/credentialsForm';
 import Notification from '../Layout/Notification/Notification';
 import { signUpAction } from '../../store/slices/auth';
 
-
 class CredentialsForm extends Component {
 	constructor(){
 		super();
@@ -37,14 +36,13 @@ class CredentialsForm extends Component {
 		const { credentialsFormMode, signUp } = this.props;
 		const contentObj = {email, password}
 		this.props.submit(contentObj);
-		//  form validation
 
 		if ( credentialsFormMode === 'log-in' ) {
 			return
 		}
 		
 		if ( credentialsFormMode === 'sign-in' ) {
-			signUp(email, password)
+			signUp(email.trim(), password)
 		}
 	}
 	toggleFormMode = (content) => {

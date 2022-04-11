@@ -1,4 +1,5 @@
 import React, { Component, createRef } from 'react'
+import { arePasswordsEaqual, checkPasswordLength } from '../../validation/validationFunctions';
 
 export default class SignInForm extends Component {
 	constructor(){
@@ -11,16 +12,17 @@ export default class SignInForm extends Component {
 		let { firstPassword, secondPassword } = this;	
 		firstPassword = firstPassword.current.value;
 		secondPassword = secondPassword.current.value;
-		if(firstPassword.length > 0 && secondPassword.length > 0){
-			if(firstPassword === secondPassword && firstPassword.length >= 6){
-				setPassword(firstPassword);
-				setNotification(false)
-			} else if(firstPassword === secondPassword && firstPassword.length < 6){
-				setNotification({text:'Password must have more then 6 characters', status: 'warning'});
-			}else{
-				console.log('go')
-				setNotification({text:'Passwords are not the same', status: 'warning'});
+		const areEaqual = arePasswordsEaqual(firstPassword, secondPassword);
+		if ( areEaqual.isValid ) {
+			const checkLength = checkPasswordLength( firstPassword, 6 );
+			if ( checkLength.isValid ){
+				setPassword( checkLength.result );
+				setNotification(false);
+			}else { 
+				setNotification( checkLength.result );
 			}
+		} else {
+			setNotification ( areEaqual.result );
 		}
 	}
 render() {

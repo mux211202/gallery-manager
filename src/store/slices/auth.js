@@ -8,7 +8,7 @@ export const authSlice = createSlice({
     name: 'authSlice',
     initialState,
     reducers: {
-        signUp(state, action){
+        signUp(state){
             console.log('sign upped')
             state.isLogged = true;
         }
@@ -45,7 +45,7 @@ export const signUpAction = (email, password) => {
         try{
             await sendRequest()
         }catch(e){
-            console.log(e.message)
+            console.log(e)
         }
         
     }
