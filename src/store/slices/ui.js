@@ -1,36 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-    isNotificationVisible:''
-}
-
-export const credentialsFormSlice = createSlice({
-    name: 'credentialsForm',
-    initialState,
-    reducers:{
-        submit(state, action){
-            state.email = action.payload.email;
-            state.password = action.payload.password;
-        },
-        toggleCredentialsForm(state, action){
-            console.log(action)
-            state.isCredentialsFormVisible = !state.isCredentialsFormVisible;
-            if(action.payload === 'sign-in' || action.payload === 'log-in'){
-                state.credentialsFormMode = action.payload;
-            }
-        },
-        toggleCredentialsFormMode(state, action){
-            const payload = action.payload;
-            let mode = state.credentialsFormMode;
-            if((payload === 'sign-in' || payload === 'log-in') && payload !== mode){
-                mode = payload;
-            }else {
-                return
-            }
-            state.credentialsFormMode = mode; 
-        }
-    }
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState: { isNotificationVisible: false, notification: null },
+  reducers: {
+    toggleNotification(state, action) {
+       
+          
+      if (!action.payload.isVisible){
+        state.isNotificationVisible = false;
+        state.notification = null;
+      } else { 
+        state.isNotificationVisible = true;
+        state.notification = {
+            status: action.payload.status, // there are three statuses: error(red), warning(yellow), success(green)
+            title: action.payload.title,
+            message: action.payload.message,
+          };
+      } 
+      
+    },
+  },
 });
 
-export const credentialsFormReducer = credentialsFormSlice.reducer;
-export const credentialsFormActions = credentialsFormSlice.actions;
+export const uiActions = uiSlice.actions;
+export const uiSliceReducer = uiSlice.reducer;
+export default uiSlice;

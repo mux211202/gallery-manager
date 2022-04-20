@@ -1,5 +1,4 @@
-import React, { Component, createRef } from 'react'
-import { arePasswordsEaqual, checkPasswordLength } from '../../validation/validationFunctions';
+import React, { Component, createRef } from 'react';
 
 export default class SignInForm extends Component {
 	constructor(){
@@ -7,38 +6,28 @@ export default class SignInForm extends Component {
 		this.firstPassword = createRef();
 		this.secondPassword = createRef();
 	}
-	comparePasswords = () => {
-		const { setPassword, setNotification } = this.props;
-		let { firstPassword, secondPassword } = this;	
-		firstPassword = firstPassword.current.value;
-		secondPassword = secondPassword.current.value;
-		const areEaqual = arePasswordsEaqual(firstPassword, secondPassword);
-		if ( areEaqual.isValid ) {
-			const checkLength = checkPasswordLength( firstPassword, 6 );
-			if ( checkLength.isValid ){
-				setPassword( checkLength.result );
-				setNotification(false);
-			}else { 
-				setNotification( checkLength.result );
-			}
-		} else {
-			setNotification ( areEaqual.result );
-		}
+	setPassword = () => {
+		const { setPassword } = this.props;
+		setPassword(this.firstPassword.current.value);	
+	}
+	setSecondPassword = () => {
+		const { setSecondPassword } = this.props;
+		setSecondPassword(this.secondPassword.current.value);	
 	}
 render() {
 	const { setEmail } = this.props;
-	const { comparePasswords, firstPassword, secondPassword } = this;
+	const { setPassword, firstPassword, secondPassword, setSecondPassword } = this;
 	return (
 	<>
 		<label>E-mail:</label>
 		<br/>
-		<input onBlur={setEmail} className='email' type='email'/>
+		<input noValidate onBlur={setEmail} className='email' type='email'/>
 		<label>Password:</label>
 		<br/>
-		<input onBlur={comparePasswords} ref={firstPassword} type='password' className='firstPassword'/>
+		<input onBlur={setPassword} ref={firstPassword} type='password' className='firstPassword'/>
 		<label>Repeat password:</label>
 		<br/>
-		<input onBlur={comparePasswords} ref={secondPassword} type='password' className='secondPassword'/>
+		<input onBlur={setSecondPassword} ref={secondPassword} type='password' className='secondPassword'/>
 	</>
 	)
 }

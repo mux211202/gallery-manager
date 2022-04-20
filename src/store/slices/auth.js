@@ -1,16 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit"; 
 
 const initialState = {
-    isLogged: false
+    isLogged: false,
+    token:'',
+    email:''
 }
 
 export const authSlice = createSlice({
     name: 'authSlice',
     initialState,
     reducers: {
-        signUp(state){
-            console.log('sign upped')
+        logIn(state, action){
+            console.log(action.payload);
+            const payload = action.payload;
             state.isLogged = true;
+            state.token = payload.idToken;
+            state.email = payload.email;
         }
     }
 })
@@ -19,11 +24,18 @@ export const authReducer = authSlice.reducer;
 export const authActions = authSlice.actions;
 
 // action creator thunk
-export const signUpAction = (email, password) => {
+export const authAction = (email, password, mode) => {
     return async (dispatch) => {
         // AIzaSyCmO2Lv56E1cK9FUVL_8UQ04_Jeo44nrH0
         const sendRequest = async() => {
-            const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCmO2Lv56E1cK9FUVL_8UQ04_Jeo44nrH0',
+            let url;
+            if (mode === 'sign-up') {
+                url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCmO2Lv56E1cK9FUVL_8UQ04_Jeo44nrH0';
+            }
+            if (mode === 'log-in') {
+                url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCmO2Lv56E1cK9FUVL_8UQ04_Jeo44nrH0';
+            }
+            const response = await fetch(url,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -38,16 +50,19 @@ export const signUpAction = (email, password) => {
             if(!response.ok){
                 throw new Error('Sign up failed');
             }else {
-                dispatch(authActions.signUp);
+                return response.json();
             }
         }
 
         try{
-            await sendRequest()
+            const data = await sendRequest();
+            console.log(data);
+            dispatch(authActions.logIn(data));
         }catch(e){
-            console.log(e)
+            console.log(e.message)
         }
         
     }
 }
+
 

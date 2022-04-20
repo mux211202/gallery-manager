@@ -9,7 +9,7 @@ class LogInForm extends Component {
       <>
         <label>E-mail:</label>
         <br/>
-        <input onBlur={setEmail} className='email' type='email'/>
+        <input noValidate onBlur={setEmail} className='email' type='email'/>
         <label>Password:</label>
         <br/>
         <input onBlur={(e)=>setPassword(e.target.value)} type='password' className='firstPassword'/>

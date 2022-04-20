@@ -7,52 +7,73 @@ import Button from '../Layout/Button/Button';
 import { connect } from 'react-redux';
 import { credentialsFormActions } from '../../store/slices/credentialsForm';
 import Notification from '../Layout/Notification/Notification';
-import { signUpAction } from '../../store/slices/auth';
+import { authAction } from '../../store/slices/auth';
+import { uiActions } from '../../store/slices/ui';
+import { arePasswordsValid, isEmailValid } from '../../validation/validationFunctions';
 
 class CredentialsForm extends Component {
 	constructor(){
 		super();
 		this.state = {
-			isNotificationVisible: false, 
 			email:'',
 			password:'',
+			secondPassword:''
 		}
 	}
 	
 	setEmail = (e) => {
-		console.log(e.target.value)
 		this.setState({email: e.target.value});
 	}
 	setPassword = (password) => { 
-		console.log(password)
 		this.setState({password}) 
 	}
-	setNotification = (isNotificationVisible) => {
-		this.setState({isNotificationVisible});
+	setSecondPassword = (secondPassword) => { 
+		this.setState({secondPassword}) 
 	}
 	formSubmitHandler = (e) => {
 		e.preventDefault();
-		const { email, password } = this.state;
-		const { credentialsFormMode, signUp } = this.props;
+		const { email, password, secondPassword } = this.state;
+		const { credentialsFormMode, auth } = this.props;
 		const contentObj = {email, password}
 		this.props.submit(contentObj);
 
 		if ( credentialsFormMode === 'log-in' ) {
-			return
+			auth(email.trim(), password, 'log-in')
 		}
 		
 		if ( credentialsFormMode === 'sign-in' ) {
-			signUp(email.trim(), password)
+			//validation
+			const passwordsValid = arePasswordsValid(password, secondPassword);
+			const emailValid = isEmailValid(email);
+			if( passwordsValid.isValid && emailValid.isValid ) {
+				console.log(emailValid)
+				auth(email.trim(), password, 'sign-up')
+			} else {
+				let obj = {
+					isVisible: true,
+					status: 'warning',
+					title: '',
+					message: ''
+				}
+				if( passwordsValid.isValid && !emailValid.isValid ) {
+					obj.message = emailValid.result;
+					this.props.toggleNotification(obj);
+				} else if ( !passwordsValid.isValid && emailValid.isValid ) {
+					obj.message = passwordsValid.result;
+					this.props.toggleNotification(obj);
+				} else {
+					obj.message = `${emailValid.result} and ${passwordsValid.result.toLowerCase()}`;
+					this.props.toggleNotification(obj);
+				}
+			}
 		}
 	}
 	toggleFormMode = (content) => {
 		this.props.toggleCredentialsFormMode(content);
 	}
 	render() {
-		console.log(this.props)
-		const { credentialsFormMode } = this.props;
-		const { isNotificationVisible } = this.state;
-		const { setEmail, setNotification, setPassword } = this;
+		const { credentialsFormMode, isNotificationVisible, notification } = this.props;
+		const { setEmail, setPassword, setSecondPassword } = this;
 		return (
 				<Form onSubmit={this.formSubmitHandler} formClass='CredentialsForm'>
 					<div className='CredentialsForm-tabs'>
@@ -68,14 +89,16 @@ class CredentialsForm extends Component {
 						</div>
 					</div>
 					<div className='CredentialsForm-Form'>
-						{ credentialsFormMode === 'sign-in' && <SignInForm setNotification={setNotification} setEmail={setEmail} setPassword={setPassword}/> }
-						{ credentialsFormMode === 'log-in' && <LogInForm setNotification={setNotification} setEmail={setEmail} setPassword={setPassword}/> }
+						{ credentialsFormMode === 'sign-in' && 
+						<SignInForm setEmail={setEmail} setPassword={setPassword} setSecondPassword={setSecondPassword}/> }
+						{ credentialsFormMode === 'log-in' && 
+						<LogInForm  setEmail={setEmail} setPassword={setPassword}/> }
 					</div>
 					<div className='CredentialsForm-sidebar'>
-						{ credentialsFormMode === 'sign-in' ? 'SIGN IN' : 'LOG IN' }
+						{ credentialsFormMode === 'sign-in' ? 'SIGN UP' : 'LOG IN' }
 					</div>
 					<Button className="CredentialsForm-btn" type="submit">{ credentialsFormMode === 'sign-in' ? 'SIGN IN' : 'LOG IN' }</Button>
-					{ isNotificationVisible && isNotificationVisible.text.length > 0 && isNotificationVisible.status.length > 0 && <Notification text={ isNotificationVisible.text } status = {isNotificationVisible.status}/> }
+					{ isNotificationVisible && <Notification notsignUpification={ notification }/> }
 				</Form>
 		)
 	}
@@ -83,17 +106,21 @@ class CredentialsForm extends Component {
 
 const mapStateToProps = state => {
 	const slice = state.credentialsFormReducer;
+	const uiSlice = state.uiSliceReducer;
 	return {
 		credentialsFormMode: slice.credentialsFormMode,
 		email: slice.email, 
-		password: slice.password
+		password: slice.password,
+		isNotificationVisible: uiSlice.isNotificationVisible,
+		notification: uiSlice.notification
 	};
 };
 const mapDispatchToProps = dispatch => {
 	return {
 		submit: (contentObj)=> dispatch(credentialsFormActions.submit(contentObj)), 
 		toggleCredentialsFormMode: (content) => dispatch(credentialsFormActions.toggleCredentialsFormMode(content)),
-		signUp: (email, password) => dispatch(signUpAction(email, password))
+		auth: (email, password, mode) => dispatch(authAction(email, password, mode)),
+		toggleNotification: (notificationObject) => dispatch(uiActions.toggleNotification(notificationObject)) //{isVisible,status, title, message}		
 	};
 }
   export default connect(mapStateToProps, mapDispatchToProps)(CredentialsForm);
