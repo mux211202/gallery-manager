@@ -4,19 +4,15 @@ import { Link } from "react-router-dom";
 import './Header.scss';
 import { connect } from 'react-redux';
 import { credentialsFormActions } from '../../store/slices/credentialsForm';
+import { authSlice } from "../../store/slices/auth";
 class Header extends PureComponent {
-	constructor(){
-		super();
-		this.state = {
-			isLogged: false
-		}
-	}
 
 	buttonClickHandler = (content) => {
 		this.props.toggleCredentialsForm(content);
 	}
 	render() {
-		const { isLogged } = this.state;
+		const { isLogged } = this.props;
+		console.log(isLogged);
 		const headerButtons = !isLogged ? (
 		<>
 			<Button
@@ -42,9 +38,15 @@ class Header extends PureComponent {
 }
 
 ;
+const mapStateToProps = state => {
+	return {
+		email: authSlice.email,
+		isLogged: authSlice.isLogged
+	}
+}
 const mapDispatchToProps = dispatch => {
 	return {
 		toggleCredentialsForm: (content) => dispatch(credentialsFormActions.toggleCredentialsForm(content))
 	};
 }
-export default connect(null, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

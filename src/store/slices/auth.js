@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"; 
-
+import { credentialsFormActions } from "./credentialsForm";
 const initialState = {
     isLogged: false,
     token:'',
@@ -58,6 +58,7 @@ export const authAction = (email, password, mode) => {
             const data = await sendRequest();
             console.log(data);
             dispatch(authActions.logIn(data));
+            dispatch(credentialsFormActions.toggleCredentialsForm());
         }catch(e){
             console.log(e.message)
         }
